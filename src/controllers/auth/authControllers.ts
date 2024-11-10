@@ -36,9 +36,14 @@ export const loginUser = async (req: Request, res: Response) => {
     const comparePass = await user.comparePassword(password);
     if (!comparePass) return res.status(400).json({ message: "Invalid user or password" });
 
-    const token = jwt.sign({ id: user._id, email: user.email, username: user.username }, jwtSecret);
+    const token = jwt.sign({ id: user._id, email: user.email, name: user.username }, jwtSecret);
 
-    res.json(token);
+    res.status(200).json({
+      id: user._id,
+      name: user.username,
+      email: user.email,
+      token
+    });
   } catch (error) {
     console.log("error :>> ", error);
     res.status(500).json(error);
