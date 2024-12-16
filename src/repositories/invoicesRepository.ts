@@ -50,9 +50,22 @@ export class InvoicesRepository implements IInvoicesRepository {
     return await InvoicesModel.countDocuments();
   }
 
-  async invoicePaginated(query: string, currentPage: number): Promise<InvoicePaginated[]> {
+  async invoicePaginated(query?: string, currentPage?: number): Promise<InvoicePaginated[]> {
     const ITEMS_PER_PAGE = 6;
+    currentPage = currentPage || 1;
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    const matchQuery = query
+      ? {
+          $or: [
+            { "customerDetails.name": { $regex: query, $options: "i" } },
+            { "customerDetails.email": { $regex: query, $options: "i" } },
+            { amount: { $regex: query, $options: "i" } },
+            { date: { $regex: query, $options: "i" } },
+            { status: { $regex: query, $options: "i" } }
+          ]
+        }
+      : {}; // Si no hay query, no aplicar filtro.
+
     const invoices = await InvoicesModel.aggregate([
       // "JOIN" entre `invoices` y `customers` usando $lookup
       {
@@ -65,18 +78,8 @@ export class InvoicesRepository implements IInvoicesRepository {
       },
       // Descomponer el array `customerDetails` para simplificar el acceso a sus campos
       { $unwind: "$customerDetails" },
-      // Aplicar el filtro de búsqueda
-      {
-        $match: {
-          $or: [
-            { "customerDetails.name": { $regex: query, $options: "i" } },
-            { "customerDetails.email": { $regex: query, $options: "i" } },
-            { amount: { $regex: query, $options: "i" } },
-            { date: { $regex: query, $options: "i" } },
-            { status: { $regex: query, $options: "i" } }
-          ]
-        }
-      },
+      // Aplicar el filtro de búsqueda si hay query
+      { $match: matchQuery },
       // Proyectar los campos necesarios
       {
         $project: {

@@ -117,7 +117,6 @@ export const getInvoiceCount = async (_: Request, res: Response) => {
 };
 
 export const getInvoicesPaginated = async (req: Request, res: Response) => {
-  console.log("req.query :>> ", req.query);
   try {
     const invoices = await invoicesService.invoicePaginated(req.query.q as string, Number(req.query.page));
     if (!invoices) return res.status(404).json({ message: "Not Invoice Found" });
