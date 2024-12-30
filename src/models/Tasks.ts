@@ -1,20 +1,21 @@
 import mongoose, { Schema } from "mongoose";
-import { Customer } from "types/CustomerTypes";
+import { Tasks } from "types/TasksTypes";
 
-const CustomerSchema: Schema = new Schema<Customer>(
+const TaskSchema: Schema = new Schema<Tasks>(
   {
-    name: {
+    title: {
       type: String,
       required: true,
       unique: true
     },
-    email: {
+    description: {
       type: String,
       required: true,
       unique: true
     },
-    image_url: {
-      type: String
+    state: {
+      type: Boolean,
+      required: true
     }
   },
   {
@@ -23,4 +24,4 @@ const CustomerSchema: Schema = new Schema<Customer>(
   }
 );
 
-export const CustomerModel = mongoose.model<Customer>("customers", CustomerSchema);
+export const TaskModel = mongoose.model<Tasks>("tasks", TaskSchema);
