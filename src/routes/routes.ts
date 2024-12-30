@@ -27,20 +27,20 @@ export default () => {
   // Roles Routes
   router.get("/roles", verifyToken, getPermissons, findRoles);
   router.get("/roles/:id", verifyToken, getPermissons, findRolesById);
-  // router.post("/roles", verifyToken, getPermissons, createRoles);
-  router.post("/roles", createRoles);
+  router.post("/roles", verifyToken, getPermissons, createRoles);
+  //router.post("/roles", createRoles);
   router.put("/roles/:id", verifyToken, getPermissons, updateRoles);
   router.delete("/roles/:id", verifyToken, getPermissons, deleteRoles);
 
   // Task Routes
-  router.get("/task", findTasks);
-  // router.get("/task", verifyToken, getPermissons, findTasks);
+  //router.get("/task", findTasks);
+  router.get("/task", verifyToken, getPermissons, findTasks);
 
-  router.get("/task/:id", findTaskById);
-  router.post("/task", createTasks);
-  // router.post("/task", verifyToken, getPermissons, createTasks);
-  router.put("/task/:id",  updateTask);
-  router.delete("/task/:id", deleteTask);
+  router.get("/task/:id", verifyToken, getPermissons,findTaskById);
+  //router.post("/task", createTasks);
+  router.post("/task", verifyToken, getPermissons, createTasks);
+  router.put("/task/:id", verifyToken, getPermissons, updateTask);
+  router.delete("/task/:id", verifyToken, getPermissons, deleteTask);
 
 
   return router;
